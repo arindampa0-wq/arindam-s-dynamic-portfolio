@@ -35,18 +35,18 @@ const AdminDashboard = () => {
     try {
       const [projectsData, certificatesData, messagesData] = await Promise.all([
         publicApi.getProjects(),
-        publicApi.getCertificates(),
+        publicApi.getCertificate(),
         token ? adminApi.getMessages(token) : Promise.resolve([]),
       ]);
-      setProjects(projectsData);
-      setCertificates(certificatesData);
-      setMessages(messagesData);
+      setProjects(projectsData.content || []);
+      setCertificates(certificatesData.content || []);
+      setMessages(messagesData.content || []);
     } catch (error) {
       console.error('Failed to load data:', error);
     }
   };
 
-  const handleDeleteProject = async (id: number) => {
+  const handleDeleteProject = async (id: string) => {
     if (!token) return;
     if (!confirm('Are you sure you want to delete this project?')) return;
 
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteCertificate = async (id: number) => {
+  const handleDeleteCertificate = async (id: string) => {
     if (!token) return;
     if (!confirm('Are you sure you want to delete this certificate?')) return;
 
@@ -78,19 +78,15 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteMessage = async (id: number) => {
+  const handleMarkAsRead = async (id: string) => {
     if (!token) return;
-    if (!confirm('Are you sure you want to delete this message?')) return;
 
     try {
-      setLoading(true);
-      await adminApi.deleteMessage(id, token);
-      toast({ title: 'Success', description: 'Message deleted successfully' });
+      await adminApi.markMessageAsRead(id, token);
+      toast({ title: 'Success', description: 'Message marked as read' });
       loadData();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to delete message', variant: 'destructive' });
-    } finally {
-      setLoading(false);
+      toast({ title: 'Error', description: 'Failed to mark message as read', variant: 'destructive' });
     }
   };
 
@@ -172,12 +168,11 @@ const AdminDashboard = () => {
                           </p>
                         </div>
                         <Button
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => handleDeleteMessage(message.id)}
-                          disabled={loading}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleMarkAsRead(message.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          Mark as Read
                         </Button>
                       </div>
                     </Card>

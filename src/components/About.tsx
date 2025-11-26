@@ -67,19 +67,32 @@ export const About = () => {
           </Card>
         </div>
 
-        {/* Technologies */}
+        {/* Technologies with horizontal scrolling */}
         <div>
           <h3 className="text-2xl font-bold text-center mb-8">Skills & Technologies</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {technologies.map((tech, index) => (
-              <div
-                key={index}
-                className="px-6 py-3 bg-card rounded-lg border border-border hover:border-primary hover:shadow-md transition-all cursor-default"
-              >
-                <div className="text-sm text-muted-foreground mb-1">{tech.category}</div>
-                <div className="font-semibold">{tech.name}</div>
-              </div>
-            ))}
+          <div className="relative overflow-hidden">
+            <div className="flex gap-4 animate-scroll-left">
+              {/* First set of technologies */}
+              {technologies.map((tech, index) => (
+                <div
+                  key={`tech-1-${index}`}
+                  className="flex-shrink-0 px-6 py-3 bg-card rounded-lg border border-border hover:border-primary hover:shadow-md transition-all cursor-default"
+                >
+                  <div className="text-sm text-muted-foreground mb-1">{tech.category}</div>
+                  <div className="font-semibold">{tech.name}</div>
+                </div>
+              ))}
+              {/* Duplicate set for seamless loop */}
+              {technologies.map((tech, index) => (
+                <div
+                  key={`tech-2-${index}`}
+                  className="flex-shrink-0 px-6 py-3 bg-card rounded-lg border border-border hover:border-primary hover:shadow-md transition-all cursor-default"
+                >
+                  <div className="text-sm text-muted-foreground mb-1">{tech.category}</div>
+                  <div className="font-semibold">{tech.name}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
