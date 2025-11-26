@@ -96,6 +96,19 @@ export const adminApi = {
     return response.json();
   },
 
+  addProject: async (data: any, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/projects`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Failed to add project');
+    return response.json();
+  },
+
   createProject: async (data: FormData, token: string) => {
     const response = await fetch(`${API_BASE_URL}/admin/projects`, {
       method: 'POST',
@@ -142,6 +155,19 @@ export const adminApi = {
   },
 
   // Certificates
+  addCertificate: async (data: any, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/certificates`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Failed to add certificate');
+    return response.json();
+  },
+
   createCertificate: async (data: FormData, token: string) => {
     const response = await fetch(`${API_BASE_URL}/admin/certificates`, {
       method: 'POST',
@@ -185,6 +211,16 @@ export const adminApi = {
     });
     if (!response.ok) throw new Error('Failed to fetch messages');
     return response.json();
+  },
+
+  deleteMessage: async (id: string, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/contact/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) throw new Error('Failed to delete message');
   },
 
   markMessageAsRead: async (id: string, token: string) => {
