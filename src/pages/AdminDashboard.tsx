@@ -9,9 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Trash2, Upload } from 'lucide-react';
+import { Trash2, Upload } from 'lucide-react';
 import { adminApi, publicApi } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
+import { AddProjectDialog } from '@/components/admin/AddProjectDialog';
+import { AddCertificateDialog } from '@/components/admin/AddCertificateDialog';
+import { BackgroundAnimation } from '@/components/BackgroundAnimation';
 
 const AdminDashboard = () => {
   const { isAuthenticated, token } = useAuth();
@@ -78,20 +81,25 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleMarkAsRead = async (id: string) => {
+  const handleDeleteMessage = async (id: string) => {
     if (!token) return;
+    if (!confirm('Are you sure you want to delete this message?')) return;
 
     try {
-      await adminApi.markMessageAsRead(id, token);
-      toast({ title: 'Success', description: 'Message marked as read' });
+      setLoading(true);
+      await adminApi.deleteMessage(id, token);
+      toast({ title: 'Success', description: 'Message deleted successfully' });
       loadData();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to mark message as read', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Failed to delete message', variant: 'destructive' });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen pb-8">
+    <div className="min-h-screen pb-8 relative">
+      <BackgroundAnimation />
       <Header />
       <div className="container mx-auto px-4 pt-24">
         <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
@@ -109,10 +117,7 @@ const AdminDashboard = () => {
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold">Projects Management</h2>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Project
-                </Button>
+                {token && <AddProjectDialog token={token} onSuccess={loadData} />}
               </div>
               {projects.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No projects yet.</p>
@@ -168,11 +173,12 @@ const AdminDashboard = () => {
                           </p>
                         </div>
                         <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleMarkAsRead(message.id)}
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleDeleteMessage(message.id)}
+                          disabled={loading}
                         >
-                          Mark as Read
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </Card>
@@ -203,10 +209,7 @@ const AdminDashboard = () => {
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold">Certificates Management</h2>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Certificate
-                </Button>
+                {token && <AddCertificateDialog token={token} onSuccess={loadData} />}
               </div>
               {certificates.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No certificates yet.</p>
