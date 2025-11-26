@@ -30,7 +30,7 @@ export const Contact = () => {
 
     try {
       setLoading(true);
-      await publicApi.sendMessage(formData);
+      await publicApi.submitContact(formData);
       toast({
         title: 'Success!',
         description: 'Your message has been sent successfully.',

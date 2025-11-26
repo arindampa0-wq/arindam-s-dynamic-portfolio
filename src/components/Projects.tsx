@@ -31,8 +31,8 @@ export const Projects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const data = await publicApi.getProjects();
-      setProjects(data);
+      const response = await publicApi.getProjects();
+      setProjects(response.content || []);
     } catch (error) {
       toast({
         title: 'Error',

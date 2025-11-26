@@ -26,8 +26,8 @@ export const Certificates = () => {
   const fetchCertificates = async () => {
     try {
       setLoading(true);
-      const data = await publicApi.getCertificates();
-      setCertificates(data);
+      const response = await publicApi.getCertificate();
+      setCertificates(response.content || []);
     } catch (error) {
       toast({
         title: 'Error',
