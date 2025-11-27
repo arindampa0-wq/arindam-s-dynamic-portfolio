@@ -1,8 +1,11 @@
 import { ArrowDown, Download, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TypewriterText } from './TypewriterText';
+import { publicApi } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
 
 export const Hero = () => {
+  const { toast } = useToast();
   const roles = [
     'Backend Developer',
     'Java Developer',
@@ -14,6 +17,22 @@ export const Hero = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleDownloadResume = async () => {
+    try {
+      await publicApi.downloadResume();
+      toast({
+        title: "Success",
+        description: "Resume downloaded successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to download resume",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -49,7 +68,7 @@ export const Hero = () => {
             <Button size="lg" onClick={() => scrollToSection('projects')} className="gap-2">
               View My Work
             </Button>
-            <Button size="lg" variant="outline" className="gap-2">
+            <Button size="lg" variant="outline" className="gap-2" onClick={handleDownloadResume}>
               <Download className="h-4 w-4" />
               Download Resume
             </Button>
