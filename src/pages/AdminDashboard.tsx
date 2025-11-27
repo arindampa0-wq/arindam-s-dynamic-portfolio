@@ -182,14 +182,17 @@ const AdminDashboard = () => {
                             ))}
                           </div>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => handleDeleteProject(project.id)}
-                          disabled={loading}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex gap-2">
+                          {token && <AddProjectDialog token={token} onSuccess={loadData} project={project} />}
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => handleDeleteProject(project.id)}
+                            disabled={loading}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </Card>
                   ))}
@@ -297,14 +300,17 @@ const AdminDashboard = () => {
                           <p className="text-muted-foreground mb-2">{cert.issuer}</p>
                           <Badge variant="outline">{new Date(cert.issueDate).toLocaleDateString()}</Badge>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => handleDeleteCertificate(cert.id)}
-                          disabled={loading}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex gap-2">
+                          {token && <AddCertificateDialog token={token} onSuccess={loadData} certificate={cert} />}
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => handleDeleteCertificate(cert.id)}
+                            disabled={loading}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </Card>
                   ))}

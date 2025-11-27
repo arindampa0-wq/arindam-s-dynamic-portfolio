@@ -123,13 +123,14 @@ export const adminApi = {
     return response.json();
   },
 
-  updateProject: async (id: string, data: FormData, token: string) => {
+  updateProject: async (id: string, data: any, token: string) => {
     const response = await fetch(`${API_BASE_URL}/admin/projects/${id}`, {
       method: 'PUT',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: data,
+      body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error('Failed to update project');
     return response.json();

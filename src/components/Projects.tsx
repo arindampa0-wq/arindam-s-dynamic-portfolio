@@ -12,6 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 interface Project {
   id: string;
@@ -29,6 +30,7 @@ interface Project {
 export const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   useEffect(() => {
@@ -49,6 +51,18 @@ export const Projects = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleExpand = (projectId: string) => {
+    setExpandedProjects(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(projectId)) {
+        newSet.delete(projectId);
+      } else {
+        newSet.add(projectId);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -76,6 +90,11 @@ export const Projects = () => {
               align: "start",
               loop: true,
             }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+              }),
+            ]}
             className="w-full"
           >
             <CarouselContent className="-ml-4">
@@ -90,7 +109,21 @@ export const Projects = () => {
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">{project.overview}</p>
-                      <p className="text-muted-foreground mb-4 line-clamp-3">{project.description}</p>
+                      <div className="text-muted-foreground mb-4">
+                        <p className={expandedProjects.has(project.id) ? '' : 'line-clamp-3'}>
+                          {project.description}
+                        </p>
+                        {project.description.length > 150 && (
+                          <Button
+                            variant="link"
+                            size="sm"
+                            onClick={() => toggleExpand(project.id)}
+                            className="p-0 h-auto text-primary"
+                          >
+                            {expandedProjects.has(project.id) ? 'Read Less' : 'Read More'}
+                          </Button>
+                        )}
+                      </div>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {project.technologies?.map((tech, index) => (
                           <Badge key={index} variant="outline">
