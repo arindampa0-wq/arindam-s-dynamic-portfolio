@@ -1,20 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 import { adminApi } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
+
+interface Project {
+  id: string;
+  title: string;
+  overview: string;
+  description: string;
+  technologies: string[];
+  startDate: string;
+  endDate: string;
+  isTeamProject: boolean;
+  githubUrl?: string;
+}
 
 interface AddProjectDialogProps {
   token: string;
   onSuccess: () => void;
+  project?: Project;
 }
 
-export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) => {
+export const AddProjectDialog = ({ token, onSuccess, project }: AddProjectDialogProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -30,19 +43,19 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
     gitHubUrl: '',
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const projectData = {
-        ...formData,
-        technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
-      };
-      
-      await adminApi.addProject(projectData, token);
-      toast({ title: 'Success', description: 'Project added successfully' });
-      setOpen(false);
+  useEffect(() => {
+    if (project && open) {
+      setFormData({
+        title: project.title,
+        overview: project.overview,
+        description: project.description,
+        technologies: project.technologies.join(', '),
+        startDate: project.startDate,
+        endDate: project.endDate,
+        teamProj: project.isTeamProject,
+        gitHubUrl: project.githubUrl || '',
+      });
+    } else if (!project && open) {
       setFormData({
         title: '',
         overview: '',
@@ -53,9 +66,35 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
         teamProj: false,
         gitHubUrl: '',
       });
+    }
+  }, [project, open]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const projectData = {
+        ...formData,
+        technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
+      };
+      
+      if (project) {
+        await adminApi.updateProject(project.id, projectData, token);
+        toast({ title: 'Success', description: 'Project updated successfully' });
+      } else {
+        await adminApi.addProject(projectData, token);
+        toast({ title: 'Success', description: 'Project added successfully' });
+      }
+      
+      setOpen(false);
       onSuccess();
     } catch (error) {
-      toast({ title: 'Error', description: 'Failed to add project', variant: 'destructive' });
+      toast({ 
+        title: 'Error', 
+        description: `Failed to ${project ? 'update' : 'add'} project`, 
+        variant: 'destructive' 
+      });
     } finally {
       setLoading(false);
     }
@@ -64,14 +103,20 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Project
-        </Button>
+        {project ? (
+          <Button size="sm" variant="outline">
+            <Edit className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Project
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Project</DialogTitle>
+          <DialogTitle>{project ? 'Edit Project' : 'Add New Project'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -164,7 +209,7 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Adding...' : 'Add Project'}
+              {loading ? (project ? 'Updating...' : 'Adding...') : (project ? 'Update Project' : 'Add Project')}
             </Button>
           </div>
         </form>
