@@ -6,12 +6,14 @@ import { publicApi } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 
 interface Certificate {
-  id: number;
+  id: string;
   title: string;
   issuer: string;
-  date: string;
-  imageUrl?: string;
+  issueDate: string;
+  credentialId?: string;
   credentialUrl?: string;
+  description?: string;
+  technologies?: string[];
 }
 
 export const Certificates = () => {
@@ -27,7 +29,7 @@ export const Certificates = () => {
     try {
       setLoading(true);
       const response = await publicApi.getCertificate();
-      setCertificates(response.content || []);
+      setCertificates(Array.isArray(response) ? response : []);
     } catch (error) {
       toast({
         title: 'Error',
@@ -61,20 +63,23 @@ export const Certificates = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {certificates.map((cert) => (
               <Card key={cert.id} className="overflow-hidden hover:shadow-xl transition-shadow group">
-                {cert.imageUrl && (
-                  <div className="h-48 overflow-hidden bg-muted">
-                    <img
-                      src={cert.imageUrl}
-                      alt={cert.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                )}
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
-                  <p className="text-muted-foreground mb-3">{cert.issuer}</p>
+                  <p className="text-muted-foreground mb-2">{cert.issuer}</p>
+                  {cert.description && (
+                    <p className="text-sm text-muted-foreground mb-3">{cert.description}</p>
+                  )}
+                  {cert.technologies && cert.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {cert.technologies.map((tech, idx) => (
+                        <Badge key={idx} variant="outline" className="text-xs">
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">{new Date(cert.date).toLocaleDateString()}</Badge>
+                    <Badge variant="outline">{new Date(cert.issueDate).toLocaleDateString()}</Badge>
                     {cert.credentialUrl && (
                       <a
                         href={cert.credentialUrl}
