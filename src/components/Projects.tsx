@@ -14,15 +14,16 @@ import {
 } from '@/components/ui/carousel';
 
 interface Project {
-  id: number;
+  id: string;
   title: string;
+  overview: string;
   description: string;
-  type: 'team' | 'solo';
   technologies: string[];
-  imageUrl?: string;
+  startDate: string;
+  endDate: string;
+  isTeamProject: boolean;
   githubUrl?: string;
-  liveUrl?: string;
-  date: string;
+  isPublished: boolean;
 }
 
 export const Projects = () => {
@@ -38,7 +39,7 @@ export const Projects = () => {
     try {
       setLoading(true);
       const response = await publicApi.getProjects();
-      setProjects(response.content || []);
+      setProjects(Array.isArray(response) ? response : []);
     } catch (error) {
       toast({
         title: 'Error',
@@ -81,22 +82,14 @@ export const Projects = () => {
               {projects.map((project) => (
                 <CarouselItem key={project.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow group h-full">
-                    {project.imageUrl && (
-                      <div className="h-48 overflow-hidden bg-muted">
-                        <img
-                          src={project.imageUrl}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="text-xl font-bold">{project.title}</h3>
-                        <Badge variant={project.type === 'team' ? 'default' : 'secondary'}>
-                          {project.type === 'team' ? 'Team' : 'Solo'}
+                        <Badge variant={project.isTeamProject ? 'default' : 'secondary'}>
+                          {project.isTeamProject ? 'Team' : 'Solo'}
                         </Badge>
                       </div>
+                      <p className="text-sm text-muted-foreground mb-2">{project.overview}</p>
                       <p className="text-muted-foreground mb-4 line-clamp-3">{project.description}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {project.technologies?.map((tech, index) => (
@@ -111,14 +104,6 @@ export const Projects = () => {
                             <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                               <Github className="h-4 w-4 mr-2" />
                               Code
-                            </a>
-                          </Button>
-                        )}
-                        {project.liveUrl && (
-                          <Button size="sm" asChild>
-                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-4 w-4 mr-2" />
-                              Live
                             </a>
                           </Button>
                         )}

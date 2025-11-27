@@ -24,9 +24,9 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
     overview: '',
     description: '',
     technologies: '',
-    starDate: '',
+    startDate: '',
     endDate: '',
-    isTeamProj: false,
+    teamProj: false,
     gitHubUrl: '',
   });
 
@@ -48,9 +48,9 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
         overview: '',
         description: '',
         technologies: '',
-        starDate: '',
+        startDate: '',
         endDate: '',
-        isTeamProj: false,
+        teamProj: false,
         gitHubUrl: '',
       });
       onSuccess();
@@ -118,12 +118,12 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="starDate">Start Date *</Label>
+              <Label htmlFor="startDate">Start Date *</Label>
               <Input
-                id="starDate"
+                id="startDate"
                 type="date"
-                value={formData.starDate}
-                onChange={(e) => setFormData({ ...formData, starDate: e.target.value })}
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                 required
               />
             </div>
@@ -152,11 +152,11 @@ export const AddProjectDialog = ({ token, onSuccess }: AddProjectDialogProps) =>
           
           <div className="flex items-center space-x-2">
             <Switch
-              id="isTeamProj"
-              checked={formData.isTeamProj}
-              onCheckedChange={(checked) => setFormData({ ...formData, isTeamProj: checked })}
+              id="teamProj"
+              checked={formData.teamProj}
+              onCheckedChange={(checked) => setFormData({ ...formData, teamProj: checked })}
             />
-            <Label htmlFor="isTeamProj">Team Project</Label>
+            <Label htmlFor="teamProj">Team Project</Label>
           </div>
           
           <div className="flex justify-end gap-2">

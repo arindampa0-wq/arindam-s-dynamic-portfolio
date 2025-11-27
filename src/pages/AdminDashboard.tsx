@@ -25,6 +25,9 @@ const AdminDashboard = () => {
   const [certificates, setCertificates] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string>('');
+  const [resumeLoading, setResumeLoading] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -35,15 +38,24 @@ const AdminDashboard = () => {
   }, [isAuthenticated, navigate]);
 
   const loadData = async () => {
+    if (!token) return;
     try {
       const [projectsData, certificatesData, messagesData] = await Promise.all([
-        publicApi.getProjects(),
-        publicApi.getCertificate(),
-        token ? adminApi.getMessages(token) : Promise.resolve([]),
+        adminApi.getAllProjects(token),
+        adminApi.getAllCertificates(token),
+        adminApi.getMessages(token),
       ]);
-      setProjects(projectsData.content || []);
-      setCertificates(certificatesData.content || []);
+      setProjects(Array.isArray(projectsData) ? projectsData : []);
+      setCertificates(Array.isArray(certificatesData) ? certificatesData : []);
       setMessages(messagesData.content || []);
+      
+      // Try to load resume URL
+      try {
+        const url = await adminApi.getResumeUrl(token);
+        setResumeUrl(url);
+      } catch (error) {
+        console.log('No resume uploaded yet');
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
     }
@@ -94,6 +106,41 @@ const AdminDashboard = () => {
       toast({ title: 'Error', description: 'Failed to delete message', variant: 'destructive' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!token || !e.target.files || !e.target.files[0]) return;
+    
+    const file = e.target.files[0];
+    if (file.type !== 'application/pdf') {
+      toast({ title: 'Error', description: 'Please upload a PDF file', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      setResumeLoading(true);
+      await adminApi.uploadResume(file, token);
+      toast({ title: 'Success', description: 'Resume uploaded successfully' });
+      loadData();
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to upload resume', variant: 'destructive' });
+    } finally {
+      setResumeLoading(false);
+    }
+  };
+
+  const handleResumeDownload = async () => {
+    if (!token) return;
+    
+    try {
+      setResumeLoading(true);
+      await adminApi.downloadResume(token);
+      toast({ title: 'Success', description: 'Resume downloaded successfully' });
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to download resume', variant: 'destructive' });
+    } finally {
+      setResumeLoading(false);
     }
   };
 
@@ -192,14 +239,41 @@ const AdminDashboard = () => {
           <TabsContent value="resume">
             <Card className="p-6">
               <h2 className="text-2xl font-bold mb-6">Resume Management</h2>
-              <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-                <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground mb-2">Click to upload your resume</p>
-                <p className="text-sm text-muted-foreground">PDF files only (MAX. 10MB)</p>
-                <Button className="mt-4" variant="outline">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Download Current Resume
-                </Button>
+              <div className="space-y-6">
+                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
+                  <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground mb-2">Upload your resume</p>
+                  <p className="text-sm text-muted-foreground mb-4">PDF files only (MAX. 10MB)</p>
+                  <Input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleResumeUpload}
+                    disabled={resumeLoading}
+                    className="hidden"
+                    id="resume-upload"
+                  />
+                  <Button asChild disabled={resumeLoading}>
+                    <label htmlFor="resume-upload" className="cursor-pointer">
+                      <Upload className="h-4 w-4 mr-2" />
+                      {resumeLoading ? 'Uploading...' : 'Upload Resume'}
+                    </label>
+                  </Button>
+                </div>
+                
+                {resumeUrl && (
+                  <div className="border border-border rounded-lg p-6">
+                    <h3 className="font-semibold mb-2">Current Resume</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Resume is uploaded and available</p>
+                    <Button 
+                      onClick={handleResumeDownload} 
+                      disabled={resumeLoading}
+                      variant="outline"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {resumeLoading ? 'Downloading...' : 'Download Current Resume'}
+                    </Button>
+                  </div>
+                )}
               </div>
             </Card>
           </TabsContent>
@@ -221,7 +295,7 @@ const AdminDashboard = () => {
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold mb-1">{cert.title}</h3>
                           <p className="text-muted-foreground mb-2">{cert.issuer}</p>
-                          <Badge variant="outline">{new Date(cert.date).toLocaleDateString()}</Badge>
+                          <Badge variant="outline">{new Date(cert.issueDate).toLocaleDateString()}</Badge>
                         </div>
                         <Button
                           variant="destructive"

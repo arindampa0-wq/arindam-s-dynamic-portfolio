@@ -12,8 +12,8 @@ const getAuthHeaders = () => {
 // Public API endpoints
 export const publicApi = {
   // Projects
-  getProjects: async (page = 0, size = 6) => {
-    const response = await fetch(`${API_BASE_URL}/api/projects?page=${page}&size=${size}`);
+  getProjects: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/projects`);
     if (!response.ok) throw new Error('Failed to fetch projects');
     return response.json();
   },
@@ -88,9 +88,11 @@ export const adminApi = {
   },
 
   // Projects
-  getAllProjects: async (page = 0, size = 10) => {
-    const response = await fetch(`${API_BASE_URL}/admin/projects?page=${page}&size=${size}`, {
-      headers: getAuthHeaders(),
+  getAllProjects: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/projects`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
     if (!response.ok) throw new Error('Failed to fetch admin projects');
     return response.json();
@@ -155,8 +157,18 @@ export const adminApi = {
   },
 
   // Certificates
+  getAllCertificates: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/certificate`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) throw new Error('Failed to fetch admin certificates');
+    return response.json();
+  },
+
   addCertificate: async (data: any, token: string) => {
-    const response = await fetch(`${API_BASE_URL}/admin/certificates`, {
+    const response = await fetch(`${API_BASE_URL}/admin/certificate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -168,32 +180,21 @@ export const adminApi = {
     return response.json();
   },
 
-  createCertificate: async (data: FormData, token: string) => {
-    const response = await fetch(`${API_BASE_URL}/admin/certificates`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: data,
-    });
-    if (!response.ok) throw new Error('Failed to create certificate');
-    return response.json();
-  },
-
-  updateCertificate: async (id: string, data: FormData, token: string) => {
-    const response = await fetch(`${API_BASE_URL}/admin/certificates/${id}`, {
+  updateCertificate: async (id: string, data: any, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/admin/certificate/${id}`, {
       method: 'PUT',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: data,
+      body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error('Failed to update certificate');
     return response.json();
   },
 
   deleteCertificate: async (id: string, token: string) => {
-    const response = await fetch(`${API_BASE_URL}/admin/certificates/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/certificate/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -214,7 +215,7 @@ export const adminApi = {
   },
 
   deleteMessage: async (id: string, token: string) => {
-    const response = await fetch(`${API_BASE_URL}/admin/contact/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/messages/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -245,7 +246,7 @@ export const adminApi = {
   },
 
   // Resume
-  uploadResume: async (file: File, token: string): Promise<void> => {
+  uploadResume: async (file: File, token: string): Promise<any> => {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -257,6 +258,7 @@ export const adminApi = {
       body: formData,
     });
     if (!response.ok) throw new Error('Failed to upload resume');
+    return response.json();
   },
 
   downloadResume: async (token: string): Promise<void> => {
@@ -279,5 +281,13 @@ export const adminApi = {
     link.click();
     link.remove();
     URL.revokeObjectURL(blobUrl);
+  },
+
+  getResumeUrl: async (token: string): Promise<string> => {
+    const response = await fetch(`${API_BASE_URL}/admin/resume`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error("Failed to fetch resume URL");
+    return response.text();
   },
 };
