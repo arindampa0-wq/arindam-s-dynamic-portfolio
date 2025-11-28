@@ -1,4 +1,5 @@
-import { Code2, Sun, Moon } from 'lucide-react';
+import { useState } from 'react';
+import { Code2, Sun, Moon, Menu, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -9,10 +10,12 @@ export const Header = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAdminPage = location.pathname.startsWith('/admin');
 
   const scrollToSection = (sectionId: string) => {
+    setMobileMenuOpen(false);
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
@@ -43,7 +46,7 @@ export const Header = () => {
             <span>Arindam</span>
           </button>
 
-          {/* Navigation */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {!isAdminPage && (
               <>
@@ -63,8 +66,8 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3">
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
@@ -86,7 +89,85 @@ export const Header = () => {
               )
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex md:hidden items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="rounded-full"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 space-y-4 animate-fade-in-up">
+            {!isAdminPage && (
+              <>
+                <button 
+                  onClick={() => scrollToSection('about')} 
+                  className="block w-full text-left py-2 hover:text-primary transition-colors"
+                >
+                  About
+                </button>
+                <button 
+                  onClick={() => scrollToSection('projects')} 
+                  className="block w-full text-left py-2 hover:text-primary transition-colors"
+                >
+                  Projects
+                </button>
+                <button 
+                  onClick={() => scrollToSection('certificates')} 
+                  className="block w-full text-left py-2 hover:text-primary transition-colors"
+                >
+                  Certificate
+                </button>
+                <button 
+                  onClick={() => scrollToSection('contact')} 
+                  className="block w-full text-left py-2 hover:text-primary transition-colors"
+                >
+                  Contact
+                </button>
+                <div className="pt-2 border-t border-border">
+                  {isAuthenticated ? (
+                    <Button onClick={handleLogout} variant="destructive" className="w-full">
+                      Logout
+                    </Button>
+                  ) : (
+                    <Button onClick={() => { navigate('/admin/login'); setMobileMenuOpen(false); }} className="w-full">
+                      Admin
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+            {isAdminPage && (
+              <div className="pt-2">
+                {isAuthenticated ? (
+                  <Button onClick={handleLogout} variant="destructive" className="w-full">
+                    Logout
+                  </Button>
+                ) : (
+                  <Button onClick={() => { navigate('/admin/login'); setMobileMenuOpen(false); }} className="w-full">
+                    Admin
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </nav>
     </header>
   );

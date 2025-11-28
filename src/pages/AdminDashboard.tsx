@@ -148,49 +148,50 @@ const AdminDashboard = () => {
     <div className="min-h-screen pb-8 relative">
       <BackgroundAnimation />
       <Header />
-      <div className="container mx-auto px-4 pt-24">
-        <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
+      <div className="container mx-auto px-4 pt-20 sm:pt-24">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8">Admin Dashboard</h1>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="projects">Projects</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
-            <TabsTrigger value="resume">Resume</TabsTrigger>
-            <TabsTrigger value="certificates">Certificates</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-6 sm:mb-8 gap-1">
+            <TabsTrigger value="projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
+            <TabsTrigger value="messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
+            <TabsTrigger value="resume" className="text-xs sm:text-sm">Resume</TabsTrigger>
+            <TabsTrigger value="certificates" className="text-xs sm:text-sm">Certificates</TabsTrigger>
           </TabsList>
 
           {/* Projects Tab */}
           <TabsContent value="projects">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Projects Management</h2>
+            <Card className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">Projects Management</h2>
                 {token && <AddProjectDialog token={token} onSuccess={loadData} />}
               </div>
               {projects.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No projects yet.</p>
+                <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No projects yet.</p>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {projects.map((project) => (
-                    <Card key={project.id} className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
-                          <p className="text-muted-foreground mb-2">{project.description}</p>
-                          <div className="flex gap-2">
+                    <Card key={project.id} className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-semibold mb-2">{project.title}</h3>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">{project.description}</p>
+                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {project.technologies?.map((tech: string, i: number) => (
-                              <Badge key={i} variant="secondary">{tech}</Badge>
+                              <Badge key={i} variant="secondary" className="text-[10px] sm:text-xs">{tech}</Badge>
                             ))}
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 self-end sm:self-start flex-shrink-0">
                           {token && <AddProjectDialog token={token} onSuccess={loadData} project={project} />}
                           <Button
                             variant="destructive"
                             size="icon"
                             onClick={() => handleDeleteProject(project.id)}
                             disabled={loading}
+                            className="h-8 w-8 sm:h-10 sm:w-10"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
                       </div>
@@ -203,22 +204,22 @@ const AdminDashboard = () => {
 
           {/* Messages Tab */}
           <TabsContent value="messages">
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Contact Messages</h2>
+            <Card className="p-4 sm:p-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Contact Messages</h2>
               {messages.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No messages yet.</p>
+                <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No messages yet.</p>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {messages.map((message: any) => (
-                    <Card key={message.id} className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-semibold">{message.name}</span>
-                            <span className="text-muted-foreground">({message.email})</span>
+                    <Card key={message.id} className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                            <span className="font-semibold text-sm sm:text-base">{message.name}</span>
+                            <span className="text-xs sm:text-sm text-muted-foreground break-all">({message.email})</span>
                           </div>
-                          <p className="text-muted-foreground">{message.message}</p>
-                          <p className="text-xs text-muted-foreground mt-2">
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-2 break-words">{message.message}</p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground">
                             {new Date(message.date).toLocaleString()}
                           </p>
                         </div>
@@ -227,8 +228,9 @@ const AdminDashboard = () => {
                           size="icon"
                           onClick={() => handleDeleteMessage(message.id)}
                           disabled={loading}
+                          className="h-8 w-8 sm:h-10 sm:w-10 self-end sm:self-start flex-shrink-0"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </Card>
@@ -240,13 +242,13 @@ const AdminDashboard = () => {
 
           {/* Resume Tab */}
           <TabsContent value="resume">
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Resume Management</h2>
-              <div className="space-y-6">
-                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-                  <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground mb-2">Upload your resume</p>
-                  <p className="text-sm text-muted-foreground mb-4">PDF files only (MAX. 10MB)</p>
+            <Card className="p-4 sm:p-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Resume Management</h2>
+              <div className="space-y-4 sm:space-y-6">
+                <div className="border-2 border-dashed border-border rounded-lg p-6 sm:p-12 text-center">
+                  <Upload className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 text-muted-foreground" />
+                  <p className="text-sm sm:text-base text-muted-foreground mb-2">Upload your resume</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">PDF files only (MAX. 10MB)</p>
                   <Input
                     type="file"
                     accept="application/pdf"
@@ -255,24 +257,25 @@ const AdminDashboard = () => {
                     className="hidden"
                     id="resume-upload"
                   />
-                  <Button asChild disabled={resumeLoading}>
+                  <Button asChild disabled={resumeLoading} className="text-xs sm:text-sm">
                     <label htmlFor="resume-upload" className="cursor-pointer">
-                      <Upload className="h-4 w-4 mr-2" />
+                      <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       {resumeLoading ? 'Uploading...' : 'Upload Resume'}
                     </label>
                   </Button>
                 </div>
                 
                 {resumeUrl && (
-                  <div className="border border-border rounded-lg p-6">
-                    <h3 className="font-semibold mb-2">Current Resume</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Resume is uploaded and available</p>
+                  <div className="border border-border rounded-lg p-4 sm:p-6">
+                    <h3 className="font-semibold mb-2 text-sm sm:text-base">Current Resume</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">Resume is uploaded and available</p>
                     <Button 
                       onClick={handleResumeDownload} 
                       disabled={resumeLoading}
                       variant="outline"
+                      className="text-xs sm:text-sm w-full sm:w-auto"
                     >
-                      <Upload className="h-4 w-4 mr-2" />
+                      <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       {resumeLoading ? 'Downloading...' : 'Download Current Resume'}
                     </Button>
                   </div>
@@ -283,32 +286,35 @@ const AdminDashboard = () => {
 
           {/* Certificates Tab */}
           <TabsContent value="certificates">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Certificates Management</h2>
+            <Card className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">Certificates Management</h2>
                 {token && <AddCertificateDialog token={token} onSuccess={loadData} />}
               </div>
               {certificates.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No certificates yet.</p>
+                <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No certificates yet.</p>
               ) : (
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {certificates.map((cert) => (
-                    <Card key={cert.id} className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-1">{cert.title}</h3>
-                          <p className="text-muted-foreground mb-2">{cert.issuer}</p>
-                          <Badge variant="outline">{new Date(cert.issueDate).toLocaleDateString()}</Badge>
+                    <Card key={cert.id} className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-semibold mb-1">{cert.title}</h3>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-2">{cert.issuer}</p>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs">
+                            {new Date(cert.issueDate).toLocaleDateString()}
+                          </Badge>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 self-end sm:self-start flex-shrink-0">
                           {token && <AddCertificateDialog token={token} onSuccess={loadData} certificate={cert} />}
                           <Button
                             variant="destructive"
                             size="icon"
                             onClick={() => handleDeleteCertificate(cert.id)}
                             disabled={loading}
+                            className="h-8 w-8 sm:h-10 sm:w-10"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
                       </div>

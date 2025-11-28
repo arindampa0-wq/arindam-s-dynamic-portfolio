@@ -66,11 +66,11 @@ export const Projects = () => {
   };
 
   return (
-    <section id="projects" className="py-20 px-4 bg-muted/50">
+    <section id="projects" className="py-12 sm:py-16 md:py-20 px-4 bg-muted/50">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Projects</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">Projects</h2>
         <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto mb-6"></div>
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base px-4">
           Here are some of the projects I've worked on, showcasing my expertise in backend
           development and system design.
         </p>
@@ -95,21 +95,21 @@ export const Projects = () => {
                 delay: 4000,
               }),
             ]}
-            className="w-full"
+            className="w-full px-4 sm:px-0"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-2 sm:-ml-4">
               {projects.map((project) => (
-                <CarouselItem key={project.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={project.id} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow group h-full">
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                       <div className="flex items-start justify-between mb-3">
-                        <h3 className="text-xl font-bold">{project.title}</h3>
-                        <Badge variant={project.isTeamProject ? 'default' : 'secondary'}>
+                        <h3 className="text-lg sm:text-xl font-bold">{project.title}</h3>
+                        <Badge variant={project.isTeamProject ? 'default' : 'secondary'} className="text-xs">
                           {project.isTeamProject ? 'Team' : 'Solo'}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{project.overview}</p>
-                      <div className="text-muted-foreground mb-4">
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2">{project.overview}</p>
+                      <div className="text-xs sm:text-sm text-muted-foreground mb-4">
                         <p className={expandedProjects.has(project.id) ? '' : 'line-clamp-3'}>
                           {project.description}
                         </p>
@@ -118,24 +118,24 @@ export const Projects = () => {
                             variant="link"
                             size="sm"
                             onClick={() => toggleExpand(project.id)}
-                            className="p-0 h-auto text-primary"
+                            className="p-0 h-auto text-primary text-xs sm:text-sm"
                           >
                             {expandedProjects.has(project.id) ? 'Read Less' : 'Read More'}
                           </Button>
                         )}
                       </div>
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
                         {project.technologies?.map((tech, index) => (
-                          <Badge key={index} variant="outline">
+                          <Badge key={index} variant="outline" className="text-[10px] sm:text-xs">
                             {tech}
                           </Badge>
                         ))}
                       </div>
                       <div className="flex gap-2">
                         {project.githubUrl && (
-                          <Button size="sm" variant="outline" asChild>
+                          <Button size="sm" variant="outline" asChild className="text-xs sm:text-sm w-full sm:w-auto">
                             <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                              <Github className="h-4 w-4 mr-2" />
+                              <Github className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                               Code
                             </a>
                           </Button>
@@ -146,8 +146,10 @@ export const Projects = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0 md:-left-12" />
-            <CarouselNext className="right-0 md:-right-12" />
+            <div className="hidden sm:block">
+              <CarouselPrevious className="-left-12" />
+              <CarouselNext className="-right-12" />
+            </div>
           </Carousel>
         )}
       </div>

@@ -44,46 +44,46 @@ export const Hero = () => {
         }} />
       </div>
 
-      <div className="container mx-auto px-4 text-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-up">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 animate-fade-in-up leading-tight">
             Hi, I'm{' '}
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-gradient-x">
               Arindam
             </span>
           </h1>
 
-          <div className="text-2xl md:text-3xl mb-8 animate-fade-in-up animation-delay-200 text-code-accent font-semibold">
+          <div className="text-xl sm:text-2xl md:text-3xl mb-6 sm:mb-8 animate-fade-in-up animation-delay-200 text-code-accent font-semibold min-h-[40px] sm:min-h-[48px]">
             <TypewriterText texts={roles} />
           </div>
 
-          <p className="text-lg md:text-xl mb-12 text-muted-foreground max-w-2xl mx-auto animate-fade-in-up animation-delay-400">
+          <p className="text-base sm:text-lg md:text-xl mb-8 sm:mb-12 text-muted-foreground max-w-2xl mx-auto animate-fade-in-up animation-delay-400 px-4">
             I specialize in building scalable backend systems, developing robust APIs,
             and integrating third-party services. Passionate about creating efficient,
             maintainable solutions that power modern applications.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap gap-4 justify-center mb-12 animate-fade-in-up animation-delay-600">
-            <Button size="lg" onClick={() => scrollToSection('projects')} className="gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 animate-fade-in-up animation-delay-600 px-4">
+            <Button size="lg" onClick={() => scrollToSection('projects')} className="gap-2 w-full sm:w-auto">
               View My Work
             </Button>
-            <Button size="lg" variant="outline" className="gap-2" onClick={handleDownloadResume}>
+            <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" onClick={handleDownloadResume}>
               <Download className="h-4 w-4" />
               Download Resume
             </Button>
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-6 justify-center animate-fade-in-up animation-delay-600">
+          <div className="flex gap-6 sm:gap-8 justify-center animate-fade-in-up animation-delay-600">
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-              <Github className="h-6 w-6" />
+              <Github className="h-6 w-6 sm:h-7 sm:w-7" />
             </a>
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-              <Linkedin className="h-6 w-6" />
+              <Linkedin className="h-6 w-6 sm:h-7 sm:w-7" />
             </a>
             <a href="mailto:arindampal669@gmail.com" className="hover:text-primary transition-colors">
-              <Mail className="h-6 w-6" />
+              <Mail className="h-6 w-6 sm:h-7 sm:w-7" />
             </a>
           </div>
 
