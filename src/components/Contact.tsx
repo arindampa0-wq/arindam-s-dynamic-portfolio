@@ -48,56 +48,56 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-muted/50">
+    <section id="contact" className="py-12 sm:py-16 md:py-20 px-4 bg-muted/50">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Get In Touch</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">Get In Touch</h2>
         <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto mb-6"></div>
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base px-4">
           Have a project in mind or just want to chat about backend development? I'd love to
           hear from you!
         </p>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {/* Contact Info */}
-          <Card className="p-8">
-            <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <Mail className="h-6 w-6" />
+          <Card className="p-6 sm:p-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Contact Information</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <Mail className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <div>
-                  <div className="font-semibold">Email</div>
-                  <div className="text-muted-foreground">arindampal669@gmail.com</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
-                  <Phone className="h-6 w-6" />
-                </div>
-                <div>
-                  <div className="font-semibold">Phone</div>
-                  <div className="text-muted-foreground">+91 8583857131</div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-sm sm:text-base">Email</div>
+                  <div className="text-muted-foreground text-xs sm:text-sm break-all">arindampal669@gmail.com</div>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <MapPin className="h-6 w-6" />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent flex-shrink-0">
+                  <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
                 <div>
-                  <div className="font-semibold">Location</div>
-                  <div className="text-muted-foreground">West Bengal, India</div>
+                  <div className="font-semibold text-sm sm:text-base">Phone</div>
+                  <div className="text-muted-foreground text-xs sm:text-sm">+91 8583857131</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
+                </div>
+                <div>
+                  <div className="font-semibold text-sm sm:text-base">Location</div>
+                  <div className="text-muted-foreground text-xs sm:text-sm">West Bengal, India</div>
                 </div>
               </div>
             </div>
           </Card>
 
           {/* Contact Form */}
-          <Card className="p-8">
-            <h3 className="text-2xl font-bold mb-6">Send Me a Message</h3>
+          <Card className="p-6 sm:p-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Send Me a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                <label htmlFor="name" className="block text-xs sm:text-sm font-medium mb-2">
                   Name
                 </label>
                 <Input
@@ -106,10 +106,11 @@ export const Contact = () => {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your Name"
                   disabled={loading}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium mb-2">
                   Email
                 </label>
                 <Input
@@ -119,10 +120,11 @@ export const Contact = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="your.email@example.com"
                   disabled={loading}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label htmlFor="message" className="block text-xs sm:text-sm font-medium mb-2">
                   Message
                 </label>
                 <Textarea
@@ -132,9 +134,10 @@ export const Contact = () => {
                   placeholder="Tell me about your project or just say hello..."
                   rows={5}
                   disabled={loading}
+                  className="text-sm resize-none"
                 />
               </div>
-              <Button type="submit" className="w-full gap-2" disabled={loading}>
+              <Button type="submit" className="w-full gap-2 text-sm sm:text-base" disabled={loading}>
                 <Send className="h-4 w-4" />
                 {loading ? 'Sending...' : 'Send Message'}
               </Button>

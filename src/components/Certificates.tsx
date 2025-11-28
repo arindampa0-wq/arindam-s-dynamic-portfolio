@@ -64,11 +64,11 @@ export const Certificates = () => {
   };
 
   return (
-    <section id="certificates" className="py-20 px-4">
+    <section id="certificates" className="py-12 sm:py-16 md:py-20 px-4">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Certifications</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">Certifications</h2>
         <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto mb-6"></div>
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-muted-foreground mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base px-4">
           Professional certifications demonstrating my commitment to continuous learning.
         </p>
 
@@ -92,17 +92,17 @@ export const Certificates = () => {
                 delay: 4000,
               }),
             ]}
-            className="w-full"
+            className="w-full px-4 sm:px-0"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-2 sm:-ml-4">
               {certificates.map((cert) => (
-                <CarouselItem key={cert.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={cert.id} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow group h-full">
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
-                      <p className="text-muted-foreground mb-2">{cert.issuer}</p>
+                    <div className="p-4 sm:p-6">
+                      <h3 className="text-lg sm:text-xl font-bold mb-2">{cert.title}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2">{cert.issuer}</p>
                       {cert.description && (
-                        <div className="text-sm text-muted-foreground mb-3">
+                        <div className="text-xs sm:text-sm text-muted-foreground mb-3">
                           <p className={expandedCerts.has(cert.id) ? '' : 'line-clamp-3'}>
                             {cert.description}
                           </p>
@@ -111,7 +111,7 @@ export const Certificates = () => {
                               variant="link"
                               size="sm"
                               onClick={() => toggleExpand(cert.id)}
-                              className="p-0 h-auto text-primary"
+                              className="p-0 h-auto text-primary text-xs sm:text-sm"
                             >
                               {expandedCerts.has(cert.id) ? 'Read Less' : 'Read More'}
                             </Button>
@@ -119,25 +119,27 @@ export const Certificates = () => {
                         </div>
                       )}
                       {cert.technologies && cert.technologies.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
                           {cert.technologies.map((tech, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                            <Badge key={idx} variant="outline" className="text-[10px] sm:text-xs">
                               {tech}
                             </Badge>
                           ))}
                         </div>
                       )}
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline">{new Date(cert.issueDate).toLocaleDateString()}</Badge>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                        <Badge variant="outline" className="text-[10px] sm:text-xs">
+                          {new Date(cert.issueDate).toLocaleDateString()}
+                        </Badge>
                         {cert.credentialUrl && (
                           <a
                             href={cert.credentialUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline flex items-center gap-1"
+                            className="text-primary hover:underline flex items-center gap-1 text-xs sm:text-sm"
                           >
                             View
-                            <ExternalLink className="h-4 w-4" />
+                            <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
                           </a>
                         )}
                       </div>
@@ -146,8 +148,10 @@ export const Certificates = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0 md:-left-12" />
-            <CarouselNext className="right-0 md:-right-12" />
+            <div className="hidden sm:block">
+              <CarouselPrevious className="-left-12" />
+              <CarouselNext className="-right-12" />
+            </div>
           </Carousel>
         )}
       </div>
